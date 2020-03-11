@@ -16,7 +16,7 @@
                 <!-- {{ socketMessage === "" ? 'nothing' : socketMessage }} -->
 
                 Players:
-                {{Players === [] ? 'Nicht verbunden' : Players}}
+               <!--  {{Players === [] ? 'Nicht verbunden' : Players}} -->
 
                 <li v-for="pl in this.Players" v-bind:key="pl.Name">{{pl.Name}}</li>
 
@@ -38,7 +38,9 @@
                     connection: "", 
                     Players: [], 
                     Player: Player,
-                    ThisPlayerName: ""}
+                    ThisPlayerName: "",
+                    that:""
+                    }
             },
             props: {
                 msg: String
@@ -141,6 +143,7 @@
 
                     };
                     this.connection.onclose = function () {
+                        that.Players = []
                         console.log("closed connection");
                     };
 
