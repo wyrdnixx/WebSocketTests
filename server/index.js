@@ -2,7 +2,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 require('dotenv').config();
- 
+// UUID Generator for unice UUID Strings
+var uuid = require('uuid-random');
 
 var app = express();
 app.use(bodyParser.json());
@@ -53,6 +54,9 @@ wsServer.on('request', function(request) {
     console.log("peer: ", connection.socket.remoteAddress);
     console.log("peer: ", connection.socket._peername.port);
 
+
+
+
     //var cl = new Client(connection.socket.remoteAddress, connection.socket._peername.port);
 
     
@@ -95,10 +99,14 @@ wsServer.on('request', function(request) {
                     for (var k in msgObj.transportMessage) {
                         console.log("Found Key: ", k)
     
-                        // New Player submits ist PlayerName         
+                        // New Player submits its PlayerName         
                         if (k === "MyPlayerName") {
                         console.log("PlayerName Update: ", msgObj.transportMessage.MyPlayerName)
-                        pl = new Player(connection,msgObj.transportMessage.MyPlayerName)
+
+                            // generating UUID 
+                            //console.log("UUID: ", uuid())
+                        pl = new Player(uuid(), connection, msgObj.transportMessage.MyPlayerName)
+                        console.log("New Player created: ", pl.UUID)
                         Players.push(pl);
                         updateClients();
                         }
@@ -176,7 +184,7 @@ function updateClients() {
 
        Players.forEach(pl => {
            
-           tmpPl = new Player(null,pl.Name)
+           tmpPl = new Player(pl.UUID,null,pl.Name)
            Playerlist.Players.push(tmpPl)
     });
    console.log("Updated Playerlist for sending: ", JSON.stringify(Playerlist))

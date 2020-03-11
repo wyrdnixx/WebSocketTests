@@ -2,7 +2,7 @@
   "name": "srv",
   "version": "1.0.0",
   "description": "sadfas",
-  "main": "index.js",  
+  "main": "index.js",
   "scripts": {
     "start.dev": "nodemon",
     "start": "node index",
@@ -21,6 +21,7 @@
     "pdfgen": "^1.2.0",
     "pdfmake": "^0.1.53",
     "router": "^1.3.4",
+    "uuid-random": "^1.3.0",
     "vue": "^2.6.11",
     "websocket": "^1.0.31"
   },

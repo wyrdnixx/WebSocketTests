@@ -18,7 +18,7 @@
                 Players:
                <!--  {{Players === [] ? 'Nicht verbunden' : Players}} -->
 
-                <li v-for="pl in this.Players" v-bind:key="pl.Name">{{pl.Name}}</li>
+                <li v-for="pl in this.Players" v-bind:key="pl.Name">{{pl.UUID}} : {{pl.Name}}</li>
 
                 <div>
                     Connectionstate:
@@ -127,7 +127,7 @@
                                     json.Players.forEach(element => {
                                             console.log(element.Name)
 
-                                            that.Players.push(new Player(element.Name, element.RemoteAddress, element.Port));
+                                            that.Players.push(new Player(element.UUID, element.Name, element.RemoteAddress, element.Port));
 
 
                                         });
