@@ -3,10 +3,15 @@
     <div class="hello">
         <h1>{{ msg }}</h1>
         <!-- <button type="button" @click='connent()'>Verbinden</button> -->
+        Player name:
         <input type="text" v-model="ThisPlayerName">
         
-        <button type="button" @click='connect(ThisPlayerName)'>Verbinden</button>
+        <button type="button" @click='connect(ThisPlayerName)'>Verbinden/HostGame</button>
         <br>
+        <input v-if="!(this.connection.readyState === 1)" type="text" v-model="GameId">
+        <button v-if="!(this.connection.readyState === 1)" type="button" @click='joinGame(GameId)'>Join Game</button>
+        <br>
+
         <button type="button" @click='update()'>Update</button>
         <button type="button" @click='close()'>Close</button>
 
@@ -39,7 +44,8 @@
                     Players: [], 
                     Player: Player,
                     ThisPlayerName: "",
-                    that:""
+                    that:"",
+                    GameId:""
                     }
             },
             props: {
@@ -74,7 +80,10 @@
                         .close();
                     console.log("Closed: ", this.connection)
                 },
-                
+                joinGame(_gameId){
+                    //join a game
+                    console.log("Gamejoin started... : ", _gameId)
+                },
                 connect(_ThisPlayerName) {
                     console.log("Connect called")
                   
