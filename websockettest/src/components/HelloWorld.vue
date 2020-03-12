@@ -3,18 +3,24 @@
     <div class="hello">
         <h1>{{ msg }}</h1>
         <!-- <button type="button" @click='connent()'>Verbinden</button> -->
+
+        <div v-show="!(this.connection.readyState ===1)">
+        
         Player name:
         <input type="text" v-model="ThisPlayerName">
         
-        <button type="button" @click='connect(ThisPlayerName)'>Verbinden/HostGame</button>
+        <button v-bind:disabled="ThisPlayerName === ''" type="button" @click='connect(ThisPlayerName)'>Host a new Game</button>
         <br>
-        <input v-if="!(this.connection.readyState === 1)" type="text" v-model="GameId">
-        <button v-if="!(this.connection.readyState === 1)" type="button" @click='joinGame(GameId)'>Join Game</button>
+        GameID: <input v-if="!(this.connection.readyState === 1)" type="text" v-model="GameId">
+        <button v-bind:disabled="GameId === ''" type="button" @click='joinGame(GameId)'>Join Game</button>
         <br>
+        </div>
 
-        <button type="button" @click='update()'>Update</button>
-        <button type="button" @click='close()'>Close</button>
 
+        <div v-show="this.connection.readyState === 1">
+            <button type="button" @click='update()'>Update</button>
+            <button type="button" @click='close()'>Close</button>
+        </div>
         
             <div>
 
