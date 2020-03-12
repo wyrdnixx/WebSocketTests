@@ -19,6 +19,7 @@ var http = require('http');
 //var Client = require('./modules/client')
 
 var Player = require('./classes/Player')
+var Game = require('./classes/Game')
 
 
 var Players = [];
@@ -97,7 +98,7 @@ wsServer.on('request', function(request) {
 
                     var msgObj = JSON.parse(message.utf8Data)                
                     for (var k in msgObj.transportMessage) {
-                        console.log("Found Key: ", k)
+                        console.log("got transportMessage Key: ", k)
     
                         // New Player submits its PlayerName         
                         if (k === "MyPlayerName") {
@@ -110,6 +111,20 @@ wsServer.on('request', function(request) {
                         Players.push(pl);
                         updateClients();
                         }
+
+
+                       // Client requests new Game start
+                       if (k === 'StartNewGame' && msgObj.transportMessage.StartNewGame === true) {
+                        console.log('Client request new game to start: ');
+                        var newGameId = uuid().slice(0,5);
+                        console.log("New Game ID: ", newGameId)
+                        
+                        var _game = {
+                            "newGame" : new Game(newGameId)                            
+                        }
+                        //_game.Players.push(pl)
+                        this.sendUTF(JSON.stringify(_game))
+                    } 
 
                        // Client requests for Playerlist update
                         if (k === 'reqUpdate') {
