@@ -28,11 +28,12 @@
                 <li v-for="pl in this.Players" v-bind:key="pl.Name">{{pl.UUID}} : {{pl.Name}}</li>
                 <div>
                     Connectionstate:
-                     {{ this.connection.readyState  }}      :  GameId = {{this.GameId}}
+                     {{ this.connection.readyState  }}      
+                     <!-- GameId = {{this.GameId}} -->
                 </div>
             </div>
     
-        <GameView v-show="this.connection.readyState ===1"></GameView>
+        <GameView v-show="this.connection.readyState ===1" :GameRev=GameRev></GameView>
     </div>
 </template>
 
@@ -52,7 +53,8 @@ import GameView from './GameView.vue'
                     Player: Player,
                     ThisPlayerName: "",
                     that:"",
-                    GameId:""
+                    GameId:"",
+                    GameRev: {}
                     }
             },
             props: {
@@ -153,8 +155,10 @@ import GameView from './GameView.vue'
 
                                     case "newGame":
                                         console.log("got new GameId: ", json.newGame.UUID )
-                                        that.GameId = json.newGame.UUID;
-                                        
+                                        that.GameId = json.newGame.UUID
+
+                                        // reverenziere das neue Game -> Wird damit an GameComponent übergeben
+                                        that.GameRev = json.newGame
                                         break;
 
                                     default:
