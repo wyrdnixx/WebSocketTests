@@ -38,17 +38,18 @@
 </template>
 
 <script>
-import GameView from './GameView.vue'
+import GameView from './GameView.vue';
+import ConSvc from './ConSvc';
+import Player from '../Classes/Player';
 
-  import Player from '../Classes/Player'
         export default {
             name: 'ManageProcessors',
             components: {
-                GameView
+                GameView                
             },
             data() {
                 return {
-                    connection: "", 
+                    connection: {}, 
                     Players: [], 
                     Player: Player,
                     ThisPlayerName: "",
@@ -62,7 +63,7 @@ import GameView from './GameView.vue'
             },
             created() {
                 this.Players = []
-                    
+                
             },
             methods: {
 
@@ -92,6 +93,10 @@ import GameView from './GameView.vue'
                 joinGame(_gameId){
                     //join a game
                     console.log("Gamejoin started... : ", _gameId)
+                    
+                  
+                    
+                    ConSvc.JoinGame(this.ThisPlayerName,_gameId)
                 },
                 newGame(_ThisPlayerName) {
                     console.log("Connect called")

@@ -23,6 +23,7 @@ var Game = require('./classes/Game')
 
 
 var Players = [];
+var Games = [];
 //var connections = [];
 
 var server = http.createServer(function(request, response) {
@@ -119,12 +120,36 @@ wsServer.on('request', function(request) {
                         var newGameId = uuid().slice(0,5);
                         console.log("New Game ID: ", newGameId)
                         
+                        var newGame = new Game(newGameId)
+                        Games.push(newGame) 
                         var _game = {
-                            "newGame" : new Game(newGameId)                            
-                        }
-                        //_game.Players.push(pl)
+                            "newGame" : newGame
+
+                        }                                                
+
+                        console.log(_game)
                         this.sendUTF(JSON.stringify(_game))
                     } 
+
+                    // Client try to join game
+                    if (k=== 'StartNewGame'&& msgObj.transportMessage.StartNewGame === false) {
+
+                        console.log("Player : ", msgObj.transportMessage.MyPlayerName,
+                                        " trying to join game: ", msgObj.transportMessage.JoinGameId)
+                        
+                                        // checking if requested Game exists
+                        for(var gm in Games) {
+                            console.log("Checking existing Game: ", Games[gm])
+                            if (Games[gm].UUID === msgObj.transportMessage.JoinGameId ) {
+                                console.log("Found existing Game")
+                                Games[gm].Players.push(pl)
+                            }
+                        }
+
+                        
+
+
+                    }
 
                        // Client requests for Playerlist update
                         if (k === 'reqUpdate') {
