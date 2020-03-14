@@ -8,6 +8,11 @@
     Your GameId:  {{this.$parent.GameId}}
     <br>
     GameRev = {{GameRev.UUID}}
+
+    Players in the Game: <br>
+    <ul>
+    <li v-for="pl in GameRev.Players" v-bind:key="pl.Name">{{pl.UUID}} : {{pl.Name}}</li>
+    </ul>
 </div>
 
 </template>

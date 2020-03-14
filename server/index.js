@@ -20,11 +20,11 @@ var http = require('http');
 
 var Player = require('./classes/Player')
 var Game = require('./classes/Game')
-
+//var PlayerCon = require('./classes/PlayerCon')
 
 var Players = [];
 var Games = [];
-//var connections = [];
+//var Connections = [];
 
 var server = http.createServer(function(request, response) {
 
@@ -77,20 +77,7 @@ wsServer.on('request', function(request) {
         if (message.type === 'utf8') {
             console.log("Got Message: ", message.utf8Data)
 
-
-          /*   // Client requests for Playerlist update
-            if (message.utf8Data === 'reqUpdate') {
-                console.log('Client request update: ', connection.socket.remoteAddress, ':', connection.socket._peername.port);
-                updateClients();
-            } */
-            
-            /* 
-            // Beispiel TransportMessage JSON:
-            {
-            type: 'utf8',
-            utf8Data: '{"transportMessage":{"MyPlayerName":"asdf"}}'
-            } 
-            */
+         
 
 
             for (var key in JSON.parse(message.utf8Data)) {
@@ -110,7 +97,7 @@ wsServer.on('request', function(request) {
                         pl = new Player(uuid(), connection, msgObj.transportMessage.MyPlayerName)
                         console.log("New Player created: ", pl.UUID)
                         Players.push(pl);
-                        updateClients();
+                        
                         }
 
 
@@ -120,14 +107,23 @@ wsServer.on('request', function(request) {
                         var newGameId = uuid().slice(0,5);
                         console.log("New Game ID: ", newGameId)
                         
+                        // Games Array update
                         var newGame = new Game(newGameId)
                         Games.push(newGame) 
                         var _game = {
                             "newGame" : newGame
-
                         }                                                
+                        
+                        // Players Array update
+                       /*  pl = new Player(uuid(), connection, msgObj.transportMessage.MyPlayerName)
+                        console.log("New Player created: ", pl.UUID)
+                        Players.push(pl); */
+                        
+                        // Connections Array update
+                        //var plcon = new PlayerCon(pl.UUID, connection)
+                        //Connections.push(plcon)
 
-                        console.log(_game)
+                        updateClients();
                         this.sendUTF(JSON.stringify(_game))
                     } 
 
@@ -143,6 +139,12 @@ wsServer.on('request', function(request) {
                             if (Games[gm].UUID === msgObj.transportMessage.JoinGameId ) {
                                 console.log("Found existing Game")
                                 Games[gm].Players.push(pl)
+                                console.log(Games[gm])
+                               // this.sendUTF(Games[gm])
+                               
+                               // update clients based on current connection
+                               //updateGameClients(this)
+                               updateClients();
                             }
                         }
 
@@ -151,11 +153,11 @@ wsServer.on('request', function(request) {
 
                     }
 
-                       // Client requests for Playerlist update
+                     /*   // Client requests for Playerlist update
                         if (k === 'reqUpdate') {
                             console.log('Client request update: ', connection.socket.remoteAddress, ':', connection.socket._peername.port);
                             updateClients();
-                        } 
+                        }  */
                     }
     
                 }
@@ -214,8 +216,32 @@ wsServer.on('request', function(request) {
 });
 
 
+/* function updateGameClients(_requestingConnection) {
+
+    console.log("Updating GameClients")
+    for(var gm in Games) {
+        console.log("Game: ", Games[gm])
+
+        for(var player in Games[gm].Players) {
+            console.log("Player: ", Games[gm].Players[player].UUID)
+                                 
+            
+            
+                console.log("Updating player: ", pl.UUID)
+                Games[gm].Players[player].Connection.sendUTF(Games[gm]);
+         
+         
+        }
+
+    }
+
+}
+ */
 
 function updateClients() {
+
+
+
 
     var Playerlist = {
         "Players": [                     
@@ -236,6 +262,6 @@ function updateClients() {
         //console.log(Playerlist)
         pl.Connection.sendUTF(JSON.stringify(Playerlist));
     })
-
+ 
 
 }

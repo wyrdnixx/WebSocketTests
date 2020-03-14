@@ -159,7 +159,7 @@ import Player from '../Classes/Player';
                                         break;
 
                                     case "newGame":
-                                        console.log("got new GameId: ", json.newGame.UUID )
+                                        console.log("got new GameId: ", json.newGame )
                                         that.GameId = json.newGame.UUID
 
                                         // reverenziere das neue Game -> Wird damit an GameComponent übergeben
