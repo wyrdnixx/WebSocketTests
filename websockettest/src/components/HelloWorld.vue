@@ -134,12 +134,14 @@ import Player from '../Classes/Player';
 
                     this.connection.onmessage = function (message) {
                         console.log("Got from Server: ", message)
-                        try {
+                      
+                      
+                         try {
                             var json = JSON.parse(message.data);
                         } catch (e) {
                             console.log('This does not lock like a valid JSON: ', message.data);
                             return;
-                        }
+                        } 
                         console.log(that);
                         console.log('got JSON: ', JSON.stringify(json))
                         for (var el in json) {

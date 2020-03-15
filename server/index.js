@@ -5,6 +5,8 @@ require('dotenv').config();
 // UUID Generator for unice UUID Strings
 var uuid = require('uuid-random');
 
+
+
 var app = express();
 app.use(bodyParser.json());
 app.use(cors());
@@ -114,6 +116,8 @@ wsServer.on('request', function(request) {
                             "newGame" : newGame
                         }                                                
                         
+                        newGame.Players.push(pl)
+
                         // Players Array update
                        /*  pl = new Player(uuid(), connection, msgObj.transportMessage.MyPlayerName)
                         console.log("New Player created: ", pl.UUID)
@@ -124,7 +128,7 @@ wsServer.on('request', function(request) {
                         //Connections.push(plcon)
 
                         updateClients();
-                        this.sendUTF(JSON.stringify(_game))
+                        this.sendUTF((_game))
                     } 
 
                     // Client try to join game
