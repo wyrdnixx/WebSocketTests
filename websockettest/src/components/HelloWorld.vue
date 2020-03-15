@@ -160,12 +160,12 @@ import Player from '../Classes/Player';
                                             });
                                         break;
 
-                                    case "newGame":
-                                        console.log("got new GameId: ", json.newGame )
-                                        that.GameId = json.newGame.UUID
+                                    case "Game":
+                                        console.log("got new GameId: ", json.Game )
+                                        that.GameId = json.Game.UUID
 
                                         // reverenziere das neue Game -> Wird damit an GameComponent übergeben
-                                        that.GameRev = json.newGame
+                                        that.GameRev = json.Game
                                         break;
 
                                     default:

@@ -20,13 +20,14 @@ var http = require('http');
 
 //var Client = require('./modules/client')
 
-var Player = require('./classes/Player')
-var Game = require('./classes/Game')
-//var PlayerCon = require('./classes/PlayerCon')
-
 var Players = [];
+var Player = require('./classes/Player')
+
+var Game = require('./classes/Game')
 var Games = [];
-//var Connections = [];
+
+var PlayerCon = require('./classes/PlayerCon')
+var Connections = [];
 
 var server = http.createServer(function(request, response) {
 
@@ -72,7 +73,7 @@ wsServer.on('request', function(request) {
     //var index = clients.push(connection) - 1;
     console.log((new Date()) + ' Connection accepted.');
     
-    updateClients();
+    //updateClients();
 
     connection.on('message', function(message) {
         console.log("Socket got: ", message)
@@ -92,13 +93,7 @@ wsServer.on('request', function(request) {
     
                         // New Player submits its PlayerName         
                         if (k === "MyPlayerName") {
-                        console.log("PlayerName Update: ", msgObj.transportMessage.MyPlayerName)
-
-                            // generating UUID 
-                            //console.log("UUID: ", uuid())
-                        pl = new Player(uuid(), connection, msgObj.transportMessage.MyPlayerName)
-                        console.log("New Player created: ", pl.UUID)
-                        Players.push(pl);
+                        //console.log("PlayerName Update: ", msgObj.transportMessage.MyPlayerName)
                         
                         }
 
@@ -113,11 +108,24 @@ wsServer.on('request', function(request) {
                         var newGame = new Game(newGameId)
                         Games.push(newGame) 
                         var _game = {
-                            "newGame" : newGame
+                            "Game" : newGame
                         }                                                
+
                         
+                        pl = new Player(uuid(), msgObj.transportMessage.MyPlayerName)
+                        console.log("New Player created: ", pl.UUID)
+                        Players.push(pl);
+                        
+                        var con = new PlayerCon(pl.UUID,this)
+                        Connections.push(con)
+
+
                         newGame.Players.push(pl)
 
+
+
+
+                        
                         // Players Array update
                        /*  pl = new Player(uuid(), connection, msgObj.transportMessage.MyPlayerName)
                         console.log("New Player created: ", pl.UUID)
@@ -127,8 +135,9 @@ wsServer.on('request', function(request) {
                         //var plcon = new PlayerCon(pl.UUID, connection)
                         //Connections.push(plcon)
 
-                        updateClients();
-                        this.sendUTF((_game))
+                        //updateClients();
+                        console.log("Sending new game: ", _game)
+                        this.send(JSON.stringify(_game))
                     } 
 
                     // Client try to join game
@@ -142,13 +151,25 @@ wsServer.on('request', function(request) {
                             console.log("Checking existing Game: ", Games[gm])
                             if (Games[gm].UUID === msgObj.transportMessage.JoinGameId ) {
                                 console.log("Found existing Game")
+                                
+                                
+                                
+                                pl = new Player(uuid(), msgObj.transportMessage.MyPlayerName)
+                                console.log("New Player created: ", pl.UUID)
+                                Players.push(pl);
+                        
+                                var con = new PlayerCon(pl.UUID,this)
+                                Connections.push(con)
+                                
+                                
+                                
                                 Games[gm].Players.push(pl)
                                 console.log(Games[gm])
                                // this.sendUTF(Games[gm])
                                
                                // update clients based on current connection
                                //updateGameClients(this)
-                               updateClients();
+                               updateClients(Games[gm]);
                             }
                         }
 
@@ -184,7 +205,7 @@ wsServer.on('request', function(request) {
         
         console.log("Closing connection: ", this.socket.remoteAddress, " Port: ", this.socket._peername.port )
 
-
+/* 
         Players.forEach((pl, index) => {
             console.log("Checking Players: ", index, " : ", pl.Connection.socket.remoteAddress, ":",pl.Connection.socket._peername.port )
 
@@ -194,7 +215,7 @@ wsServer.on('request', function(request) {
                     Players.splice(index,1)
                 }
         })
-
+ */
 
        /*  // Delete client from clientarray
         clients.forEach((cl,index) => {
@@ -215,7 +236,10 @@ wsServer.on('request', function(request) {
         });
         console.log("Clients in con-close: ", clients) */
 
-        updateClients();
+
+
+
+        //updateClients();
     });
 });
 
@@ -242,12 +266,35 @@ wsServer.on('request', function(request) {
 }
  */
 
-function updateClients() {
+function updateClients(_g) {
+
+    var _game = {
+        "Game" : _g
+    } 
 
 
+    console.log("updating player of game: ", _game.Game.UUID) 
+    //console.log("checking Connections: ", Connections)
+    for (var x in _game.Game.Players) {
+        console.log("Game: ", _game.Game.UUID , " - Player: ", _game.Game.Players[x].UUID )
+
+        for (var con in Connections) {
+            console.log("checking Connection: ", Connections[con].UUID)
+            if (Connections[con].UUID ===  _game.Game.Players[x].UUID){
+                console.log("Connection found... Updating...",Connections[con].Connection.socket.remoteAddress )
+                Connections[con].Connection.sendUTF(JSON.stringify(_game))
+            }
+        }
 
 
-    var Playerlist = {
+    }
+
+    /* _game.Players.forEach((pl) => {
+        console.log("Player: ", pl.UUID)
+    }); */
+
+
+    /* var Playerlist = {
         "Players": [                     
         ]
     };
@@ -265,7 +312,7 @@ function updateClients() {
         console.log("Updating Clients - Player: ",pl.Name, " : ", pl.Connection.socket.remoteAddress , " : ", pl.Connection.socket._peername.port)
         //console.log(Playerlist)
         pl.Connection.sendUTF(JSON.stringify(Playerlist));
-    })
+    }) */
  
 
 }
