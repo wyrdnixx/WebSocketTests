@@ -4,23 +4,19 @@
         <h1>{{ msg }}</h1>
         <!-- <button type="button" @click='connent()'>Verbinden</button> -->
 
-        <div v-show="!(this.connection.readyState ===1)">
-        
-        Player name:
-        <input type="text" v-model="ThisPlayerName">
-        
-        <button v-bind:disabled="ThisPlayerName === ''" type="button" @click='newGame(ThisPlayerName)'>Host a new Game</button>
-        <br>
-        GameID: <input v-if="!(this.connection.readyState === 1)" type="text" v-model="GameId">
-        <button v-bind:disabled="GameId === ''" type="button" @click='joinGame(GameId)'>Join Game</button>
-        <br>
+        <div v-show="!GameIsRunning">
+            Player name:
+            <input type="text" v-model="ThisPlayerName">        
+            <button v-bind:disabled="ThisPlayerName === ''" type="button" @click='newGame(ThisPlayerName)'>Host a new Game</button>
+            <br>
+            GameID: <input  type="text" v-model="GameId">
+            <button v-bind:disabled="GameId === ''" type="button" @click='joinGame(GameId)'>Join Game</button>            
         </div>
-
-
-        <div v-show="this.connection.readyState === 1">
+        <br>
+        <div v-show="GameIsRunning">
             <button type="button" @click='update()'>Update</button>
             <button type="button" @click='close()'>Close</button>
-        </div>
+        
         
             <div>                
                 Players: <br>
@@ -32,11 +28,11 @@
                      GameId = {{this.GameId}}
                 </div>
             </div>
-    
-        <GameView v-show="this.connection.readyState ===1" :GameRev=GameRev></GameView>
+        </div>
+       
         
         GameView:
-        <GameView v-show="this.GameId !==''" :GameRev=GameRev></GameView>
+        <GameView v-show="this.GameIsRunning" :GameRev=GameRev></GameView>
         
     </div>
 </template>
@@ -59,7 +55,8 @@ import Player from '../Classes/Player';
                     ThisPlayerName: "",
                     that:"",
                     GameId:"",
-                    GameRev: {}
+                    GameRev: {},
+                    GameIsRunning: false
                     }
             },
             props: {
@@ -87,8 +84,9 @@ import Player from '../Classes/Player';
                     this.connection.send(JSON.stringify(transportMessage));
                 },
                 updateGame(_game) {
-                    console.log("updateGame updating GameRev")
-                    this.GameRev = _game        
+                    console.log("updateGame updating")
+                    this.GameRev = _game  
+                    this.GameIsRunning = true      
                 },
                 close() {
                     console.log(this.connection)
@@ -96,12 +94,11 @@ import Player from '../Classes/Player';
                         .connection
                         .close();
                     console.log("Closed: ", this.connection)
+                    this.GameIsRunning = false
                 },
                 joinGame(_gameId){
                     //join a game
-                    console.log("Gamejoin started... : ", _gameId)
-                    
-                  
+                    console.log("Gamejoin started... : ", _gameId)                  
                     
                     ConSvc.JoinGame(this, this.ThisPlayerName,_gameId)
                 },
@@ -173,6 +170,7 @@ import Player from '../Classes/Player';
 
                                         // reverenziere das neue Game -> Wird damit an GameComponent übergeben
                                         that.GameRev = json.Game
+                                        that.updateGame(json.Game)
                                         break;
 
                                     default:
