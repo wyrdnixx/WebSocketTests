@@ -29,11 +29,15 @@
                 <div>
                     Connectionstate:
                      {{ this.connection.readyState  }}      
-                     <!-- GameId = {{this.GameId}} -->
+                     GameId = {{this.GameId}}
                 </div>
             </div>
     
         <GameView v-show="this.connection.readyState ===1" :GameRev=GameRev></GameView>
+        
+        GameView:
+        <GameView v-show="this.GameId !==''" :GameRev=GameRev></GameView>
+        
     </div>
 </template>
 
@@ -43,7 +47,7 @@ import ConSvc from './ConSvc';
 import Player from '../Classes/Player';
 
         export default {
-            name: 'ManageProcessors',
+            name: 'WelcomeScreen',
             components: {
                 GameView                
             },
@@ -82,7 +86,10 @@ import Player from '../Classes/Player';
                     }
                     this.connection.send(JSON.stringify(transportMessage));
                 },
-
+                updateGame(_game) {
+                    console.log("updateGame updating GameRev")
+                    this.GameRev = _game        
+                },
                 close() {
                     console.log(this.connection)
                     this
@@ -96,7 +103,7 @@ import Player from '../Classes/Player';
                     
                   
                     
-                    ConSvc.JoinGame(this.ThisPlayerName,_gameId)
+                    ConSvc.JoinGame(this, this.ThisPlayerName,_gameId)
                 },
                 newGame(_ThisPlayerName) {
                     console.log("Connect called")

@@ -5,9 +5,9 @@
 
     <br>
     <br>
-    Your GameId:  {{this.$parent.GameId}}
+    App GameId:  {{this.$parent.GameId}}
     <br>
-    GameRev = {{GameRev.UUID}}
+    GameView GameRev = {{GameRev.UUID}}
 <br>
 <br>
     Players in the Game: <br>

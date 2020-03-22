@@ -145,11 +145,13 @@ wsServer.on('request', function(request) {
 
                         console.log("Player : ", msgObj.transportMessage.MyPlayerName,
                                         " trying to join game: ", msgObj.transportMessage.JoinGameId)
-                        
+
+                                        // leerzeichen entfernen
+                                        JoinGameId = msgObj.transportMessage.JoinGameId.trim()
                                         // checking if requested Game exists
                         for(var gm in Games) {
-                            console.log("Checking existing Game: ", Games[gm])
-                            if (Games[gm].UUID === msgObj.transportMessage.JoinGameId ) {
+                            //console.log("Checking existing Game: ", Games[gm])
+                            if (Games[gm].UUID === JoinGameId ) {
                                 console.log("Found existing Game")
                                 
                                 
@@ -279,10 +281,10 @@ function updateClients(_g) {
         console.log("Game: ", _game.Game.UUID , " - Player: ", _game.Game.Players[x].UUID )
 
         for (var con in Connections) {
-            console.log("checking Connection: ", Connections[con].UUID)
+            //console.log("checking Connection: ", Connections[con].UUID)
             if (Connections[con].UUID ===  _game.Game.Players[x].UUID){
                 console.log("Connection found... Updating...",Connections[con].Connection.socket.remoteAddress )
-                Connections[con].Connection.sendUTF(JSON.stringify(_game))
+                Connections[con].Connection.send(JSON.stringify(_game))
             }
         }
 
