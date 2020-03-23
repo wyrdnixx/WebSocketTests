@@ -90,9 +90,11 @@ import Player from '../Classes/Player';
                 },
                 close() {
                     console.log(this.connection)
-                    this
-                        .connection
-                        .close();
+                    
+                    // Im moment noch doppelt - solange new game und join noch getrennt
+                    this.connection.close();
+                    ConSvc.connection.close();
+
                     console.log("Closed: ", this.connection)
                     this.GameIsRunning = false
                 },

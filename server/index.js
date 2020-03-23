@@ -5,7 +5,7 @@ require('dotenv').config();
 // UUID Generator for unice UUID Strings
 var uuid = require('uuid-random');
 
-
+var _ = require('lodash');
 
 var app = express();
 app.use(bodyParser.json());
@@ -174,29 +174,12 @@ wsServer.on('request', function(request) {
                                updateClients(Games[gm]);
                             }
                         }
-
-                        
-
-
                     }
-
-                     /*   // Client requests for Playerlist update
-                        if (k === 'reqUpdate') {
-                            console.log('Client request update: ', connection.socket.remoteAddress, ':', connection.socket._peername.port);
-                            updateClients();
-                        }  */
+                  
                     }
     
                 }
             }
-
-            
-
-            
-            
-         
-            
-
 
         } else {
             console.log("no UTF-Message: ", message)
@@ -205,68 +188,43 @@ wsServer.on('request', function(request) {
 
     connection.on('close', function(connection) {
         
-        console.log("Closing connection: ", this.socket.remoteAddress, " Port: ", this.socket._peername.port )
-
-/* 
-        Players.forEach((pl, index) => {
-            console.log("Checking Players: ", index, " : ", pl.Connection.socket.remoteAddress, ":",pl.Connection.socket._peername.port )
-
-            if (pl.Connection.socket.remoteAddress === this.socket.remoteAddress &&
-                pl.Connection.socket._peername.port === this.socket._peername.port) {
-                    console.log("Found...")
-                    Players.splice(index,1)
-                }
-        })
- */
-
-       /*  // Delete client from clientarray
-        clients.forEach((cl,index) => {
-
-            console.log("Client: ", cl.RemoteAddress, " Port: ", cl.Port)
-            if (cl.RemoteAddress === this.socket.remoteAddress && cl.Port === this.socket._peername.port) {
-                console.log("Found client to delete: ",index," - ", cl.RemoteAddress, ":",cl.Port )
-                clients.splice(index,1)
-            }
-        })
         
-        // Delete connection from connectionarray
-        connections.forEach((con, index) => {
-            if( con === this) {
-                console.log("Found connection to delete: ",index," - ", this.socket._peername)
-           connections.splice(index,1)           
-           }
-        });
-        console.log("Clients in con-close: ", clients) */
+        console.log("OnClose closing connection: ", this.socket.remoteAddress, " Port: ", this.socket._peername.port )
+        
+        var current = _.findIndex(Connections,{'Connection' : this}) 
+        console.log("Connection Array: ", current   )
+        console.log("PlayerUUID from Connections: ", Connections[current].UUID)
 
+        for (var x in Games){
+            console.log("Check Game: ",Games[x].UUID)
+            var _i = _.findIndex(Games[x].Players, {'UUID' : Connections[current].UUID})
+            
+            if(_i >= 0) {
+                Games[x].Players.splice(_i,1)
+                updateClients(Games[x])
+            }
+            
+        }
+        
 
+        
+        /* for (var con in Connections) {
 
+                console.log("onclose checking connection: ", Connections[con].UUID)
 
-        //updateClients();
+            if (Connections[con].Connection === connection) {
+                console.log("Connection to close found...")
+                for (var x in that.Games){
+                    for (var pl in that.Games[x].Players) {
+                        console.log("Players: ", that.Games[x].Players[pl])
+                    }
+                }
+            }
+        } */
     });
 });
 
 
-/* function updateGameClients(_requestingConnection) {
-
-    console.log("Updating GameClients")
-    for(var gm in Games) {
-        console.log("Game: ", Games[gm])
-
-        for(var player in Games[gm].Players) {
-            console.log("Player: ", Games[gm].Players[player].UUID)
-                                 
-            
-            
-                console.log("Updating player: ", pl.UUID)
-                Games[gm].Players[player].Connection.sendUTF(Games[gm]);
-         
-         
-        }
-
-    }
-
-}
- */
 
 function updateClients(_g) {
 
@@ -291,30 +249,5 @@ function updateClients(_g) {
 
     }
 
-    /* _game.Players.forEach((pl) => {
-        console.log("Player: ", pl.UUID)
-    }); */
-
-
-    /* var Playerlist = {
-        "Players": [                     
-        ]
-    };
-
-       Players.forEach(pl => {
-           
-           tmpPl = new Player(pl.UUID,null,pl.Name)
-           Playerlist.Players.push(tmpPl)
-    });
-   console.log("Updated Playerlist for sending: ", JSON.stringify(Playerlist))
-    
-
-
-    Players.forEach((pl, index) => {
-        console.log("Updating Clients - Player: ",pl.Name, " : ", pl.Connection.socket.remoteAddress , " : ", pl.Connection.socket._peername.port)
-        //console.log(Playerlist)
-        pl.Connection.sendUTF(JSON.stringify(Playerlist));
-    }) */
- 
 
 }
