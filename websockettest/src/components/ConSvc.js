@@ -9,7 +9,7 @@ class ConSvc {
 
     static JoinGame(_this, _ThisPlayerName, _gameId) {
         
-        this.connection = new WebSocket('ws://192.168.1.53:3000')
+        this.connection = new WebSocket('ws://api.' + window.location.host)
         window.WebSocket = window.WebSocket || window.MozWebSocket;
         
         

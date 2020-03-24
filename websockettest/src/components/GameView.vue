@@ -1,4 +1,4 @@
-<template v-on:visible="created()">
+<template v-on:visible="GameViewStarting()">
 
 <div>
     Game is on
@@ -42,12 +42,14 @@
                 GameRev: {}
             },
             created() {
-                console.log("in created in GameView")
-                this.Players = []
-                    console.log("GameRev: ",JSON.stringify(this.GameRev))
+                
             },
             methods: {
-
+                    GameViewStarting() {
+                        console.log("in created in GameView")
+                        this.Players = []
+                        console.log("GameRev: ",JSON.stringify(this.GameRev))
+                    }
             }
         }
 </script>

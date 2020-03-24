@@ -64,6 +64,7 @@ import Player from '../Classes/Player';
             },
             created() {
                 this.Players = []
+                console.log("Current Website: ", window.location.host)
                 
             },
             methods: {
@@ -89,11 +90,23 @@ import Player from '../Classes/Player';
                     this.GameIsRunning = true      
                 },
                 close() {
-                    console.log(this.connection)
+                    console.log("This.Connection = ", this.connection)
                     
                     // Im moment noch doppelt - solange new game und join noch getrennt
-                    this.connection.close();
-                    ConSvc.connection.close();
+                    try {
+                        ConSvc.connection.close();
+                    }catch (e) {
+                            console.log(e)
+                    }                        
+                    try {
+                        this.connection.close();
+                    }catch  (e){
+                        console.log(e)
+                    }
+                     
+                    
+                    
+                    
 
                     console.log("Closed: ", this.connection)
                     this.GameIsRunning = false
@@ -107,7 +120,7 @@ import Player from '../Classes/Player';
                 newGame(_ThisPlayerName) {
                     console.log("Connect called")
                   
-                    this.connection = new WebSocket('ws://192.168.1.53:3000')
+                    this.connection = new WebSocket('ws://api.' + window.location.host)
                      window.WebSocket = window.WebSocket || window.MozWebSocket;
 
                     let that = this;
