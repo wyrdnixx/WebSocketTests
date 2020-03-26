@@ -5,16 +5,27 @@
         <!-- <button type="button" @click='connent()'>Verbinden</button> -->
 
         <div v-show="!GameIsRunning">
-            Player name:
-            <input type="text" v-model="ThisPlayerName">        
-            <button v-bind:disabled="ThisPlayerName === ''" type="button" @click='newGame(ThisPlayerName)'>Host a new Game</button>
+
+            <table border="0"> 
+                <tr>
+                    <td>Player name: </td>
+                    <td><input type="text" v-model="ThisPlayerName"></td>
+                     <td rowspan="2"><button style="height:100%" v-bind:disabled="ThisPlayerName === ''" type="button" @click='newGame(ThisPlayerName)'> {{GameId === '' ? 'Host a new Game' : 'Join Game' }}</button></td>
+                </tr>
+                <tr>
+                    <td>GameID: </td>
+                    <td><input  type="text" v-model="GameId"></td>                   
+                    
+                </tr>
+            </table>          
+            
+            
             <br>
-            GameID: <input  type="text" v-model="GameId">
-            <button v-bind:disabled="GameId === ''" type="button" @click='joinGame(GameId)'>Join Game</button>            
+            
+           <!--  <button v-bind:disabled="GameId === ''" type="button" @click='joinGame(GameId)'>Join Game</button>             -->
         </div>
         <br>
-        <div v-show="GameIsRunning">
-            <button type="button" @click='update()'>Update</button>
+        <div v-show="GameIsRunning">            
             <button type="button" @click='close()'>Close</button>
         
         
@@ -111,13 +122,24 @@ import Player from '../Classes/Player';
                     console.log("Closed: ", this.connection)
                     this.GameIsRunning = false
                 },
-                joinGame(_gameId){
+                /* joinGame(_gameId){
                     //join a game
                     console.log("Gamejoin started... : ", _gameId)                  
                     
                     ConSvc.JoinGame(this, this.ThisPlayerName,_gameId)
+                }, */
+                
+                newGame() {
+
+                    if(this.GameId==='') {
+                        this.newGameOld(this.ThisPlayerName)
+                    }else {
+                        ConSvc.JoinGame(this, this.ThisPlayerName,this.GameId)
+                    }
+
+                    //ConSvc.NewSession(this);
                 },
-                newGame(_ThisPlayerName) {
+                newGameOld(_ThisPlayerName) {
                     console.log("Connect called")
                   
                     this.connection = new WebSocket('ws://api.' + window.location.host)

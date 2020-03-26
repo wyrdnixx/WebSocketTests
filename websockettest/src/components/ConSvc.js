@@ -7,6 +7,11 @@ class ConSvc {
         return null
     }
 
+    static NewSession (_this) {
+
+        console.log("NewSession  MyPlayerName: ", _this.ThisPlayerName)
+    }
+
     static JoinGame(_this, _ThisPlayerName, _gameId) {
         
         this.connection = new WebSocket('ws://api.' + window.location.host)
