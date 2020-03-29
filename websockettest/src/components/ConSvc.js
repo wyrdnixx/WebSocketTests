@@ -12,6 +12,14 @@ class ConSvc {
         console.log("NewSession  MyPlayerName: ", _this.ThisPlayerName)
     }
 
+    
+    /**
+     * Starts or joins a game
+     * @param {*} _this webapp object (usualy this)
+     * @param {*} _ThisPlayerName Playername entered 
+     * @param {*} _gameId gameId of game to join or '0' if new game starting
+     */
+
     static JoinGame(_this, _ThisPlayerName, _gameId) {
         
         this.connection = new WebSocket('ws://api.' + window.location.host)
@@ -21,11 +29,20 @@ class ConSvc {
         let that = this;
         
         this.connection.onopen = function () {
-            console.log("Connection Opened...")                        
+            console.log("Connection Opened...")  
+            
+            var _startNewGame
+            // _StartNewGame can be deleted when the server 
+            // is changed to check the gameId to 0
+            if(_gameId === 0) {
+                _startNewGame = true
+            } else {
+                _startNewGame = false
+            }
              var transportMessage = {
             "transportMessage" : {
                 "MyPlayerName" : _ThisPlayerName,
-                "StartNewGame" : false,
+                "StartNewGame" : _startNewGame,
                 "JoinGameId" : _gameId
                 }
             

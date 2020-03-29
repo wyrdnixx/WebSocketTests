@@ -26,24 +26,11 @@
         </div>
         <br>
         <div v-show="GameIsRunning">            
-            <button type="button" @click='close()'>Close</button>
-        
-        
-            <div>                
-                Players: <br>
-               <!--  {{Players === [] ? 'Nicht verbunden' : Players}} -->
-                <li v-for="pl in this.Players" v-bind:key="pl.Name">{{pl.UUID}} : {{pl.Name}}</li>
-                <div>
-                    Connectionstate:
-                     {{ this.connection.readyState  }}      
-                     GameId = {{this.GameId}}
-                </div>
-            </div>
+            <button type="button" @click='close()'>Close</button>     
+            <GameView  :GameRev=GameRev></GameView>
         </div>
-       
         
-        GameView:
-        <GameView v-show="this.GameIsRunning" :GameRev=GameRev></GameView>
+        <!-- <GameView v-show="this.GameIsRunning" :GameRev=GameRev></GameView> -->
         
     </div>
 </template>
@@ -132,106 +119,18 @@ import Player from '../Classes/Player';
                 newGame() {
 
                     if(this.GameId==='') {
-                        this.newGameOld(this.ThisPlayerName)
+                        //this.newGameOld(this.ThisPlayerName)
+                        // new game starting 
+                        ConSvc.JoinGame(this, this.ThisPlayerName,0)
                     }else {
+                        // join existing game
                         ConSvc.JoinGame(this, this.ThisPlayerName,this.GameId)
                     }
 
                     //ConSvc.NewSession(this);
-                },
-                newGameOld(_ThisPlayerName) {
-                    console.log("Connect called")
-                  
-                    this.connection = new WebSocket('ws://api.' + window.location.host)
-                     window.WebSocket = window.WebSocket || window.MozWebSocket;
-
-                    let that = this;
-                    
-
-                    console.log("Connecting")
-                    //verschoben in created
-                   
-
-                    // Send current Playername
-
-                    
-                   
-
-                    this.connection.onopen = function () {
-                        console.log("Connection Opened...")                        
-                         var transportMessage = {
-                        "transportMessage" : {
-                            "MyPlayerName" : _ThisPlayerName,
-                            "StartNewGame" : true
-                            }
-                        
-                    }
-                    this.send(JSON.stringify(transportMessage));
-                    };
-
-                    this.connection.onerror = function (error) {
-                        console.log("Connection Error: " + error)
-                    };
-
-                    this.connection.onmessage = function (message) {
-                        console.log("Got from Server: ", message)
-                      
-                      
-                         try {
-                            var json = JSON.parse(message.data);
-                        } catch (e) {
-                            console.log('This does not lock like a valid JSON: ', message.data);
-                            return;
-                        } 
-                        console.log(that);
-                        console.log('got JSON: ', JSON.stringify(json))
-                        for (var el in json) {
-                            console.log('got Message: ', el)
-                                
-                                switch(el)
-                                {
-                                    // got a Player List Update
-                                    case "Players":
-                                        that.Players = []
-                                        //Passt :-)
-                                        //console.log(json)
-                                        json.Players.forEach(element => {
-                                                console.log(element.Name)
-                                                that.Players.push(new Player(element.UUID, element.Name, element.RemoteAddress, element.Port));
-                                            });
-                                        break;
-
-                                    case "Game":
-                                        console.log("got new GameId: ", json.Game )
-                                        that.GameId = json.Game.UUID
-
-                                        // reverenziere das neue Game -> Wird damit an GameComponent übergeben
-                                        that.GameRev = json.Game
-                                        that.updateGame(json.Game)
-                                        break;
-
-                                    default:
-                                        // nothing
-                                }
-                                
-                                
-                                }
-                        }
-                        console.log(this);
-                        /*  that
-                        .sockets
-                        .push(this.url)
-                    that.socketMessage = JSON.stringify(json.data);
-
-                    */
-                
-                    
-                    this.connection.onclose = function () {
-                        that.Players = []
-                        console.log("closed connection");
-                    };
-
                 }
+
+                
             }
 
         }

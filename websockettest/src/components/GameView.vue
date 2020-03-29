@@ -1,19 +1,19 @@
 <template v-on:visible="GameViewStarting()">
 
 <div>
-    Game is on
+        
+    <br>
+    Active GameID = {{GameRev.UUID}}
+<br>
 
-    <br>
-    <br>
-    App GameId:  {{this.$parent.GameId}}
-    <br>
-    GameView GameRev = {{GameRev.UUID}}
-<br>
-<br>
+
+<div id="wrapper">
     Players in the Game: <br>
     <ul>
     <li v-for="pl in GameRev.Players" v-bind:key="pl.Name">{{pl.UUID}} : {{pl.Name}}</li>
     </ul>
+</div>
+
 </div>
 
 </template>
