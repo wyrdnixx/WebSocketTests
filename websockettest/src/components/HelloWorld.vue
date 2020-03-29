@@ -67,21 +67,7 @@ import Player from '../Classes/Player';
             },
             methods: {
 
-                update() {
-
-                    /* 
-                    this
-                        .connection
-                        .send('reqUpdate') */
-                    console.log("Connetion: ", this.connection)
-                    var transportMessage = {
-                        "transportMessage" : {
-                            "reqUpdate" : ""
-                            }
-                        
-                    }
-                    this.connection.send(JSON.stringify(transportMessage));
-                },
+     
                 updateGame(_game) {
                     console.log("updateGame updating")
                     this.GameRev = _game  
@@ -121,9 +107,11 @@ import Player from '../Classes/Player';
                     if(this.GameId==='') {
                         //this.newGameOld(this.ThisPlayerName)
                         // new game starting 
+                        console.log("helloworld is starting new game...")
                         ConSvc.JoinGame(this, this.ThisPlayerName,0)
                     }else {
                         // join existing game
+                        console.log("helloworld is trying to join game...")
                         ConSvc.JoinGame(this, this.ThisPlayerName,this.GameId)
                     }
 

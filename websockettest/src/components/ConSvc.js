@@ -31,18 +31,18 @@ class ConSvc {
         this.connection.onopen = function () {
             console.log("Connection Opened...")  
             
-            var _startNewGame
+         /*    var _startNewGame
             // _StartNewGame can be deleted when the server 
             // is changed to check the gameId to 0
             if(_gameId === 0) {
                 _startNewGame = true
             } else {
                 _startNewGame = false
-            }
+            } */
              var transportMessage = {
             "transportMessage" : {
                 "MyPlayerName" : _ThisPlayerName,
-                "StartNewGame" : _startNewGame,
+              /*   "StartNewGame" : _startNewGame, */
                 "JoinGameId" : _gameId
                 }
             
