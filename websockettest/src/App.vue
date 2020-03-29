@@ -42,8 +42,7 @@ export default {
 }
 
 
-#wrapper_right{
-    background: #151e27;
+#wrapper_right{   
     overflow:auto;
     float: right;
     margin: 2%
