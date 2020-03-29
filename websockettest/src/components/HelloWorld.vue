@@ -1,6 +1,6 @@
 <template>
 
-    <div class="hello">
+    <div>
         <h1>{{ msg }}</h1>
         <!-- <button type="button" @click='connent()'>Verbinden</button> -->
 

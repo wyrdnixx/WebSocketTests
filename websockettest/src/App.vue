@@ -36,14 +36,22 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  background: #1d2935;
+  color: #0068cf;
+  
 }
 
-#wrapper{
-    background:red;
+
+#wrapper_right{
+    background: #151e27;
     overflow:auto;
-    float: right
+    float: right;
+    margin: 2%
+}
+#wrapper_left{    
+    overflow:auto;
+    float: left;
+    margin: 2%
 }
 
 </style>
